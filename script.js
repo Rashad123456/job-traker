@@ -13,41 +13,40 @@ let currentTab = "all";
 
 function renderJobs() {
     const container = document.getElementById("jobs-container");
-    let filteredJobs;
 
-    if (currentTab === "all") {
-        filteredJobs = jobs;
-    } else {
-        filteredJobs = jobs.filter(job => job.status === currentTab);
-    }
+    let filteredJobs = currentTab === "all"
+        ? jobs
+        : jobs.filter(job => job.status === currentTab);
 
     document.getElementById("job-list-count").innerText = filteredJobs.length;
-
     if (filteredJobs.length === 0) {
         container.innerHTML = `
             <div class="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-dashed border-slate-300">
-                <i data-lucide="briefcase" class="w-16 h-16 text-blue-400 mb-4"></i>
+                
+                <img src="jobs.png" 
+                     alt="No Jobs" 
+                     class="w-32 h-32 mb-6 opacity-90" />
+
                 <h4 class="text-xl font-bold text-slate-800">No jobs Available</h4>
                 <p class="text-slate-500">There are no jobs in this category.</p>
             </div>
         `;
-        lucide.createIcons();
         return;
     }
-
     container.innerHTML = filteredJobs.map(job => `
         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
             
-            <div class="flex justify-between items-start mb-1">
+            <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-xl text-slate-900">${job.companyName}</h4>
-                <button onclick="deleteJob(${job.id})" class="text-slate-300 hover:text-red-500 transition-colors">
-                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                <button onclick="deleteJob(${job.id})" 
+                        class="text-slate-300 hover:text-red-500 transition-colors">
+                    🗑
                 </button>
             </div>
 
-            <p class="text-blue-600 font-semibold text-lg mb-1">${job.position}</p>
+            <p class="text-blue-600 font-semibold text-lg mb-2">${job.position}</p>
 
-            <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-400 mb-2">
+            <div class="flex flex-wrap gap-4 text-sm text-slate-400 mb-3">
                 <span>${job.location}</span>
                 <span>${job.type}</span>
                 <span>${job.salary}</span>
@@ -56,18 +55,18 @@ function renderJobs() {
             <div class="mb-3">
                 ${
                     job.status === "interview"
-                    ? `<span class="px-3 py-0.5 text-[10px] font-bold tracking-wider rounded-md bg-emerald-100 text-emerald-600 uppercase">INTERVIEW</span>`
+                    ? `<span class="px-3 py-1 text-xs font-bold rounded-md bg-emerald-100 text-emerald-600">INTERVIEW</span>`
                     : job.status === "rejected"
-                    ? `<span class="px-3 py-0.5 text-[10px] font-bold tracking-wider rounded-md bg-red-100 text-red-500 uppercase">REJECTED</span>`
+                    ? `<span class="px-3 py-1 text-xs font-bold rounded-md bg-red-100 text-red-500">REJECTED</span>`
                     : ""
                 }
             </div>
 
-            <p class="text-slate-600 text-sm mb-6 leading-relaxed">${job.description}</p>
+            <p class="text-slate-600 text-sm mb-6">${job.description}</p>
 
             <div class="flex gap-3">
                 <button onclick="updateStatus(${job.id}, 'interview')" 
-                    class="px-5 py-2 rounded-lg text-sm font-bold border transition-all cursor-pointer
+                    class="px-5 py-2 rounded-lg text-sm font-bold border transition-all
                     ${job.status === "interview" 
                         ? "bg-emerald-50 text-emerald-600 border-emerald-200" 
                         : "text-emerald-600 border-emerald-200 hover:bg-emerald-50"}">
@@ -75,7 +74,7 @@ function renderJobs() {
                 </button>
 
                 <button onclick="updateStatus(${job.id}, 'rejected')" 
-                    class="px-5 py-2 rounded-lg text-sm font-bold border transition-all cursor-pointer
+                    class="px-5 py-2 rounded-lg text-sm font-bold border transition-all
                     ${job.status === "rejected" 
                         ? "bg-red-50 text-red-500 border-red-200" 
                         : "text-red-500 border-red-200 hover:bg-red-50"}">
@@ -84,8 +83,6 @@ function renderJobs() {
             </div>
         </div>
     `).join("");
-
-    lucide.createIcons();
 }
 
 function updateStatus(id, status) {
